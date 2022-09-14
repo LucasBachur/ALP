@@ -14,6 +14,7 @@ data Exp a where
   Minus ::Exp Int -> Exp Int -> Exp Int
   Times ::Exp Int -> Exp Int -> Exp Int
   Div ::Exp Int -> Exp Int -> Exp Int
+  ECond ::Exp Bool -> Exp Int -> Exp Int
 
   -- Expresiones booleanas
   BTrue ::Exp Bool
