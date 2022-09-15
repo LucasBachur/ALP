@@ -35,10 +35,10 @@ lis = makeTokenParser
                         , "="
                         , "=="
                         , "!="
-                        , ";"
-                        , ","
                         , "?"
                         , ":"
+                        , ";"
+                        , ","
                         ]
     }
   )
@@ -47,7 +47,11 @@ lis = makeTokenParser
 --- Parser de expressiones enteras
 -----------------------------------
 intcond :: Parser (Exp Int)
-intcond = intexp
+intcond = try (do {b <- boolexp; reservedOp lis "?";
+                   t <- intexp; reservedOp lis ":";
+                   e <- intexp; return (ECond b t e)})
+           <|> intexp
+
            
 intexp :: Parser (Exp Int)
 intexp = chainl1 intterm addOp
