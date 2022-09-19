@@ -33,7 +33,7 @@ update x v (s, w) = (M.insert x v s, w)
 addWork :: Integer -> State -> State
 addWork n = (\(x,y) -> (x, y + n))
 
--- Suma los costos de 2 estados.
+-- Suma los costos de 2 estados, cuando los estados son iguales.
 sumWorks :: State -> State -> State
 sumWorks (s, w1) (s', w2) = (s, w1 + w2)
 
@@ -105,7 +105,10 @@ evalExp (Div exp1 exp2) s   = case evalExp exp1 s of
                                     Left error -> Left error
                                 Left error -> Left error
 evalExp (ECond bexp exp1 exp2) s = case evalExp bexp s of
-                                    Right (b :!: s') -> evalExp exp s
+                                    Right (b :!: s') -> 
+                                      case evalExp exp s of
+                                        Right (n :!: s'') -> Right (n :!: (sumWorks s' s''))
+                                        Left error -> Left error 
                                       where exp = if b then exp1 else exp2
                                     Left error -> Left error 
 evalExp BTrue s           = Right (True :!: s) 

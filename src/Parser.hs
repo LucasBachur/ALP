@@ -47,7 +47,10 @@ lis = makeTokenParser
 --- Parser de expressiones enteras
 -----------------------------------
 intcond :: Parser (Exp Int)
-intcond = intexp
+intcond = try(do {b <- boolatom; reservedOp lis "?";
+                  e1 <- intcond; reservedOp lis ":";
+                  e2 <- intcond; return (ECond b e1 e2)})
+            <|> intexp
 
            
 intexp :: Parser (Exp Int)
@@ -95,6 +98,12 @@ boolterm = try (do {reserved lis "true"; return BTrue})
                                         <|> (do {reservedOp lis ">"; return Gt})
                           exp2 <- intcond
                           return (op exp1 exp2)
+
+boolatom :: Parser (Exp Bool)
+boolatom = try (do {reserved lis "true"; return BTrue})
+           <|> try (do {reserved lis "false"; return BFalse})
+               <|> try (do {reservedOp lis "!"; b <- boolatom; return (Not b)})
+                   <|> parens lis boolexp
 
 -----------------------------------
 --- Parser de comandos
