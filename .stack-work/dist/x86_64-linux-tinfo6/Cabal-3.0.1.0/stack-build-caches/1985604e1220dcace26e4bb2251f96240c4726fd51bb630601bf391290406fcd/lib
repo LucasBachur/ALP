@@ -3,13 +3,13 @@
 /mnt/c/Users/Lucas/Documents/LCC/ALP/ALP/TP1.cabal:
   hash: 17c9923d503306b00f7225affc985abdbc22dbc55a62900d3377ae27e5f9584a
 /mnt/c/Users/Lucas/Documents/LCC/ALP/ALP/src/Eval2.hs:
-  hash: 7f2fc683ec66b932c2cce44094a0af835eef0adb78d95694a97eb2fa9dfa7560
+  hash: a1f7a1939846a12783f0e94ab5267be50587eda12c50064bf8a4d7b8c75e6e55
 /mnt/c/Users/Lucas/Documents/LCC/ALP/ALP/README.md:
   hash: ea60c288f6932e34e269e17df780c0c805d9ade594b18b292dad2ea0777ffb6a
 /mnt/c/Users/Lucas/Documents/LCC/ALP/ALP/ChangeLog.md:
   hash: d671c1d73cb79102b61920326ee7d43c81e9d4d770677cfaccbcfd6c725e41a9
 /mnt/c/Users/Lucas/Documents/LCC/ALP/ALP/src/Eval3.hs:
-  hash: 7c8f927699af714422e0d3c5440b3cbfb4da88aa13bb88e3691f4a281e82f9cd
+  hash: 19c1db442fcea6d563b6aba139fa165167e7988b29c3c6006b7d3040c2853f06
 /usr/include/stdc-predef.h:
   hash: 64fdf694f7b3d51ec6c45c06dcb71ebbe9455742d3ea673012016668853d3bff
 /mnt/c/Users/Lucas/Documents/LCC/ALP/ALP/src/PPLis.hs:
@@ -21,8 +21,8 @@
 /home/lucasbachur/.stack/programs/x86_64-linux/ghc-tinfo6-8.8.3/lib/ghc-8.8.3/include/ghcversion.h:
   hash: 40d1b759f485f1cd5a54141a6412691ac2b76930507289a16a6a7b89b045b4d2
 /mnt/c/Users/Lucas/Documents/LCC/ALP/ALP/src/Parser.hs:
-  hash: ece1aa4b9d1b62c520fa102f79a5e9076eae834636c2cfa08c82d21cb89758cb
+  hash: 04baa513f7e8e60ac52cf82839ddf9cae84bb178e9b220d6b91d34f7cd8681a5
 /mnt/c/Users/Lucas/Documents/LCC/ALP/ALP/src/Eval1.hs:
-  hash: 581118c3373fdee0e3542c27e6053f847e95b0980287b313cde4306fddf9468e
+  hash: c7830d164be4cbe08ee5c99481feb18bc9722487fd32fb9b927e287887596415
 /mnt/c/Users/Lucas/Documents/LCC/ALP/ALP/.stack-work/dist/x86_64-linux-tinfo6/Cabal-3.0.1.0/build/autogen/Paths_TP1.hs:
   hash: 5c9d9aed9f86850079780092c31cca3d668a34fed74494608539cad406f12e82

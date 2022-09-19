@@ -47,10 +47,7 @@ lis = makeTokenParser
 --- Parser de expressiones enteras
 -----------------------------------
 intcond :: Parser (Exp Int)
-intcond = try (do {b <- boolexp; reservedOp lis "?";
-                   t <- intexp; reservedOp lis ":";
-                   e <- intexp; return (ECond b t e)})
-           <|> intexp
+intcond = intexp
 
            
 intexp :: Parser (Exp Int)
@@ -112,10 +109,10 @@ comm = try (do {reserved lis "skip"; return Skip})
          <|> try (do {v <- identifier lis;
                       reservedOp lis "="; exp <- intcond;
                       return (Let v exp)})
-             <|> try (do {reserved lis "if"; b <- boolexp; reserved lis "then";
+             <|> try (do {reserved lis "if"; b <- boolexp;
                           c1 <- braces lis commseq; reserved lis "else"; c2 <- braces lis commseq;
                           return (IfThenElse b c1 c2)})
-                 <|> try (do {reserved lis "if"; b <- boolexp; reserved lis "then";
+                 <|> try (do {reserved lis "if"; b <- boolexp;
                               c <- braces lis commseq; return (IfThen b c)})
                      <|>  do {reserved lis "while"; b <- boolexp;
                               c <- braces lis commseq;

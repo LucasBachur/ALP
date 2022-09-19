@@ -44,96 +44,94 @@ stepCommStar c    s = do (c' :!: s') <- stepComm c s
 stepComm :: Comm -> State -> Either Error (Pair Comm State)
 stepComm Skip s                     = Right (Skip :!: s)
 stepComm (Let var exp) s            = case evalExp exp s of
-                                        Right (n :!: s') -> Right (Skip :!: update var n s')
+                                        Right n -> Right (Skip :!: update var n s)
                                         Left error -> Left error
 stepComm (Seq Skip c) s             = Right (c :!: s)
 stepComm (Seq com1 com2) s          = case stepComm com1 s of
                                         Right (com :!: s') -> Right (Seq com com2 :!: s')
                                         Left error -> Left error
 stepComm (IfThenElse bexp c1 c2) s  = case evalExp bexp s of
-                                        Right (b :!: s') -> if b then Right (c1 :!: s')
-                                                                 else Right (c2 :!: s')
+                                        Right b -> if b then Right (c1 :!: s)
+                                                                 else Right (c2 :!: s)
                                         Left error -> Left error
-stepComm loop@(While bexp c) s = Right ((Seq (IfThenElse bexp Skip loop) c ) :!: s)
+stepComm loop@(While bexp c) s = Right ((IfThenElse bexp (Seq c loop) Skip):!: s)
 
 -- Evalua una expresion
-evalExp :: Exp a -> State -> Either Error (Pair a State)
-evalExp (Const n) s         = Right (n :!: s)
-evalExp (Var v) s           = case lookfor v s of
-                                Right n -> Right (n :!: s)
-                                _ -> Left UndefVar
+evalExp :: Exp a -> State -> Either Error a
+evalExp (Const n) s         = Right n
+evalExp (Var v) s           = lookfor v s
 evalExp (UMinus exp) s      =  case evalExp exp s of
-                                Right (n :!: s') -> Right (-n :!: s')
+                                Right n -> Right (-n)
                                 Left error -> Left error
 evalExp (Plus exp1 exp2) s  = case evalExp exp1 s of
-                                Right (n1 :!: s') -> 
-                                  case evalExp exp2 s' of
-                                      Right (n2 :!: s'') -> Right (n1 + n2 :!: s'')
+                                Right n1-> 
+                                  case evalExp exp2 s of
+                                      Right n2-> Right (n1 + n2)
                                       Left error -> Left error
                                 Left error -> Left error
 evalExp (Minus exp1 exp2) s = case evalExp exp1 s of
-                                Right (n1 :!: s') -> 
-                                  case evalExp exp2 s' of
-                                    Right (n2 :!: s'') -> Right (n1 - n2 :!: s'')
+                                Right n1-> 
+                                  case evalExp exp2 s of
+                                    Right n2-> Right (n1 - n2)
                                     Left error -> Left error
                                 Left error -> Left error
 evalExp (Times exp1 exp2) s = case evalExp exp1 s of
-                                Right (n1 :!: s') -> 
-                                  case evalExp exp2 s' of
-                                    Right (n2 :!: s'') -> Right (n1 * n2 :!: s'')
+                                Right n1 -> 
+                                  case evalExp exp2 s of
+                                    Right n2 -> Right (n1 * n2)
                                     Left error -> Left error
                                 Left error -> Left error
 evalExp (Div exp1 exp2) s   = case evalExp exp1 s of
-                                Right (n1 :!: s') -> 
-                                  case evalExp exp2 s' of
-                                    Right (n2 :!: s'') -> 
+                                Right n1 -> 
+                                  case evalExp exp2 s of
+                                    Right n2 -> 
                                       case n2 of
                                         0 -> Left DivByZero
-                                        _ -> Right (div n1 n2 :!: s'')
+                                        _ -> Right (div n1 n2)
                                     Left error -> Left error
                                 Left error -> Left error
-evalExp (Econd bexp exp1 exp2) s = case evalExp bexp s of
-                                    Right (b :!: s') -> if b then Right (exp1 :!: s')
-                                                             else Right (exp2 :!: s')
+evalExp (ECond bexp exp1 exp2) s = case evalExp bexp s of
+                                    Right b -> evalExp exp s
+                                      where exp = if b then exp1 else exp2
                                     Left error -> Left error 
-evalExp BTrue s           = Right (True :!: s)
-evalExp BFalse s          = Right (False :!: s)
+evalExp BTrue s           = Right True 
+evalExp BFalse s          = Right False 
 evalExp (Lt exp1 exp2) s  = case evalExp exp1 s of
-                              Right (b1 :!: s') -> 
-                                case evalExp exp2 s' of
-                                  Right (b2 :!: s'') -> Right (b1 < b2 :!: s'')
+                              Right b1  -> 
+                                case evalExp exp2 s of
+                                  Right b2 -> Right (b1 < b2) 
                                   Left error -> Left error
                               Left error -> Left error
 evalExp (Gt exp1 exp2) s  = case evalExp exp1 s of
-                              Right (b1 :!: s') -> 
-                                case evalExp exp2 s' of
-                                  Right (b2 :!: s'') -> Right (b1 > b2 :!: s'')
+                              Right b1 -> 
+                                case evalExp exp2 s of
+                                  Right b2 -> Right (b1 > b2)
                                   Left error -> Left error
                               Left error -> Left error
 evalExp (And exp1 exp2) s = case evalExp exp1 s of
-                              Right (b1 :!: s') -> 
-                                case evalExp exp2 s' of
-                                  Right (b2 :!: s'') -> Right ((b1 && b2) :!: s'')
+                              Right b1 -> 
+                                case evalExp exp2 s of
+                                  Right b2 -> Right (b1 && b2)
                                   Left error -> Left error
                               Left error -> Left error
 evalExp (Or exp1 exp2) s  = case evalExp exp1 s of
-                              Right (b1 :!: s') -> 
-                                case evalExp exp2 s' of
-                                  Right (b2 :!: s'') -> Right ((b1 || b2) :!: s'')
+                              Right b1 -> 
+                                case evalExp exp2 s of
+                                  Right b2 -> Right (b1 || b2)
                                   Left error -> Left error
                               Left error -> Left error
 evalExp (Not exp) s       = case evalExp exp s of
-                              Right (b :!: s') -> Right (not b :!: s') 
+                              Right b -> Right (not b) 
                               Left error -> Left error
 evalExp (Eq exp1 exp2) s  = case evalExp exp1 s of
-                              Right (b1 :!: s') -> 
-                                case evalExp exp2 s' of
-                                  Right (b2 :!: s'') -> Right (b1 == b2 :!: s'')
+                              Right b1 -> 
+                                case evalExp exp2 s of
+                                  Right b2 -> Right (b1 == b2)
                                   Left error -> Left error
                               Left error -> Left error 
 evalExp (NEq exp1 exp2) s = case evalExp exp1 s of
-                              Right (b1 :!: s') -> 
-                                case evalExp exp2 s' of
-                                  Right (b2 :!: s'') -> Right (b1 /= b2 :!: s'')
+                              Right b1 -> 
+                                case evalExp exp2 s of
+                                  Right b2 -> Right (b1 /= b2)
                                   Left error -> Left error
                               Left error -> Left error
