@@ -71,7 +71,6 @@ evalExp (Div exp1 exp2) s = let (n1 :!: s') = evalExp exp1 s
                             in (div n1 n2 :!: s'')
 evalExp (Econd bexp exp1 exp2) s = let (b :!: s') = evalExp bexp s
                                    in if b then (exp1 :!: s') else (exp2 :!: s')
-
 evalExp BTrue s = (True :!: s)
 evalExp BFalse s = (False :!: s)
 evalExp (Lt exp1 exp2) s = let (b1 :!: s') = evalExp exp1 s

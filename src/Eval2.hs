@@ -96,7 +96,6 @@ evalExp (Econd bexp exp1 exp2) s = case evalExp bexp s of
                                     Right (b :!: s') -> if b then Right (exp1 :!: s')
                                                              else Right (exp2 :!: s')
                                     Left error -> Left error 
-
 evalExp BTrue s           = Right (True :!: s)
 evalExp BFalse s          = Right (False :!: s)
 evalExp (Lt exp1 exp2) s  = case evalExp exp1 s of
